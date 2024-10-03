@@ -14,23 +14,6 @@ export default function CreateRoom() {
   const [roomDescription, setRoomDescription] = useState<string>("");
   const [roomBackground, setRoomBackground] = useState<any>("");
 
-  const [startDateError, setStartDateError] = useState<boolean>(false);
-  const [endDateError, setEndDateError] = useState<boolean>(false);
-  const [roomNameError, setRoomNameError] = useState<boolean>(false);
-  const [roomDescriptionError, setRoomDescriptionError] =
-    useState<boolean>(false);
-  const [roomBackgroundError, setRoomBackgroundError] =
-    useState<boolean>(false);
-
-  const [startDateErrorMessage, setStartDateErrorMessage] =
-    useState<string>("");
-  const [endDateErrorMessage, setEndDateErrorMessage] = useState<string>("");
-  const [roomNameErrorMessage, setRoomNameErrorMessage] = useState<string>("");
-  const [roomDescriptionErrorMessage, setRoomDescriptionErrorMessage] =
-    useState<string>("");
-  const [roomBackgroundErrorMessage, setRoomBackgroundErrorMessage] =
-    useState<string>("");
-
   const handleDateChange = (start: Date | null, end: Date | null) => {
     setStartDate(start);
     setEndDate(end);
@@ -45,19 +28,21 @@ export default function CreateRoom() {
       name: roomName,
       description: roomDescription,
       background: roomBackground,
-      startDate: startDate,
-      endDate: endDate,
-      users: [{}],
+      startDate: startDate || new Date(),
+      endDate: endDate || null,
+      users: [],
     };
     try {
       const roomRef = await addDoc(collection(db, "rooms"), room);
       if (roomRef) {
-        navigate("/select-profile");
+        navigate("/select-profile", {
+          state: { roomName: roomName },
+        });
       }
     } catch (error) {
       console.error("Error al crear la sala:", error);
     }
-    
+
     console.log(room);
   };
 
@@ -87,7 +72,6 @@ export default function CreateRoom() {
           value={roomName}
           onChange={(e) => {
             setRoomName(e.target.value);
-            setRoomNameError(false);
           }}
         />
         <input
@@ -97,7 +81,6 @@ export default function CreateRoom() {
           value={roomDescription}
           onChange={(e) => {
             setRoomDescription(e.target.value);
-            setRoomDescriptionError(false);
           }}
         />
         <span>Selecciona un fondo personalizado</span>

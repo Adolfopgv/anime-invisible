@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create-room" element={<CreateRoom />} />
-        <Route path="/room/:id" element={<Room />} />
+        <Route path="/room/:roomid/:userid" element={<Room />} />
         <Route path="/select-profile" element={<SelectProfile />} />
       </Routes>
     </DbProvider>
