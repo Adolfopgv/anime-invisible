@@ -1,0 +1,2 @@
+### Get user anime list need auth
+GET https://api.myanimelist.net/v2/users/Ryuuujii/animelist HTTP/1.1

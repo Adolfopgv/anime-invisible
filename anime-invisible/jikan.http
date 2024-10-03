@@ -1,0 +1,2 @@
+### Get all anime genres
+GET https://api.jikan.moe/v4/genres/anime HTTP/1.1
