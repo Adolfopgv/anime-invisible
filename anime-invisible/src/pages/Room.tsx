@@ -1,19 +1,16 @@
-import { useEffect } from "react"
-import axios from "axios"
+import { doc } from "firebase/firestore";
+import { useEffect } from "react";
 
 export default function Room() {
-
   useEffect(() => {
     const getRoom = async () => {
-      try {
-        
-      } catch (error) {
-        
-      }
-    }
-  })
 
-  return (
-    <div>Room</div>
-  )
+      try {
+        const roomDoc = doc
+      } catch (error) {}
+    };
+    getRoom();
+  }, []);
+
+  return <div>Room</div>;
 }

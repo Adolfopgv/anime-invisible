@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import axios from "axios";
 import { AnimeGenre } from "../types";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,12 +13,16 @@ import {
 } from "firebase/firestore";
 import { useDb } from "../context/DbContext";
 import { v4 as uuidv4 } from "uuid";
+import Cookies from "js-cookie";
+import { UserConext } from "../context/userContext";
 
 export default function SelectProfile() {
   const db = useDb();
   const location = useLocation();
   const roomName = location.state?.roomName;
+  const roomIdLocation = location.state?.roomId;
   const navigate = useNavigate();
+  const user = useContext(UserConext);
 
   const [userAvatar, setUserAvatar] = useState<any>("");
   const [userName, setUserName] = useState<string>("");
@@ -59,7 +63,7 @@ export default function SelectProfile() {
   const animeFormats = ["Serie TV", "OVA", "Película", "Especiales", "ONA"];
 
   const handleProfileSubmit = async () => {
-    // setButtonClicked(true);
+    setButtonClicked(true);
     console.log("Guardando usuario...");
     const userId = uuidv4();
     const user = {
@@ -72,22 +76,33 @@ export default function SelectProfile() {
       animePreferences: selectedGenres || null,
       userToRecommend: {},
     };
-    console.log(roomName);
+
+    Cookies.set("token", user.id, { expires: 60 });
 
     try {
-      const roomRef = collection(db, "rooms");
-      const q = query(roomRef, where("name", "==", roomName));
-      const docs = await getDocs(q);
+      if (roomName) {
+        const roomRef = collection(db, "rooms");
+        const q = query(roomRef, where("name", "==", roomName));
+        const docs = await getDocs(q);
 
-      if (!docs.empty) {
-        const roomId = docs.docs[0].id;
-        const roomById = doc(db, "rooms", roomId);
-        await updateDoc(roomById, {
+        if (!docs.empty) {
+          const roomId = docs.docs[0].id;
+          const roomById = doc(db, "rooms", roomId);
+          await updateDoc(roomById, {
+            users: arrayUnion(user),
+          });
+
+          console.log("Usuario guardado");
+          navigate(`/room/${roomId}/${userId}`);
+        }
+      } else {
+        const roomDoc = doc(db, "rooms", roomIdLocation);
+        await updateDoc(roomDoc, {
           users: arrayUnion(user),
         });
 
-        console.log("Usuario guardado");
-        navigate(`/room/${roomId}/${userId}`);
+        console.log("usuario guardado");
+        navigate(`/room/${roomIdLocation}/${userId}`);
       }
     } catch (error) {
       console.log(error);
@@ -151,6 +166,7 @@ export default function SelectProfile() {
   return (
     <>
       <h1>Configura tu perfil</h1>
+      <h1>{user ? "Si" : "No"}</h1>
       <div className="flex flex-col">
         <div
           className="h-24 w-24 rounded-full overflow-hidden cursor-pointer hover:bg-gray-500"
