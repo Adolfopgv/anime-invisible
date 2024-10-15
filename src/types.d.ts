@@ -1,16 +1,15 @@
 export interface User {
+  animeFileList: string | null;
+  animeFormat: string[];
+  animeList: string | null;
+  animePreferences: string[];
+  avatar: string;
   id: string;
   name: string;
-  avatar: string;
-  animeFormat: string[];
-  animePreferences: string[];
-  animeDislikes: string[];
-  animeListURL: string;
-  roomId: string;
+  userToRecommend: string;
 }
 
 export interface Room {
-  id: string;
   name: string;
   description: string;
   background: string;
