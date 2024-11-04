@@ -39,7 +39,6 @@ export function UserConextProvider({ children }: any) {
               return user.id === token;
             });
             setUser(userFound);
-            console.log("sd");
           });
         } catch (error) {
           console.error("Token error: ", error);
@@ -48,6 +47,7 @@ export function UserConextProvider({ children }: any) {
         }
       } else {
         console.log("No token found");
+        setLoading(!loading);
       }
     };
     fetchUser();

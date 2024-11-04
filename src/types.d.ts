@@ -1,7 +1,7 @@
 export interface User {
   animeFileList: string | null;
   animeFormat: string[];
-  animeList: string | null;
+  animeList: string | undefined;
   animePreferences: string[];
   avatar: string;
   id: string;
@@ -15,7 +15,7 @@ export interface Room {
   background: string;
   startDate: Date | null;
   endDate: Date | null;
-  users: string[];
+  users: User[] | undefined;
 }
 
 export interface AnimeGenre {
